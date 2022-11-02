@@ -1,6 +1,7 @@
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -22,20 +23,6 @@ public class JavaCodewarsCodes {
 			};
 		}
 		return sum == 0;
-	}
-
-	public static boolean getXOWithStream(String str) {
-		Objects.requireNonNull(str);
-		return Stream.of(str.split("")).mapToInt(l -> {
-			switch (l) {
-			case "x":
-				return 1;
-			case "o":
-				return -1;
-			default:
-				return 0;
-			}
-		}).sum() == 0;
 	}
 
 	/*
@@ -73,14 +60,56 @@ public class JavaCodewarsCodes {
 				.reduce(words[0], String::concat);
 	}
 
-	/* 
-	 * QUESTION : Remove vowels. 
+	/*
+	 * QUESTION : Remove vowels.
 	 * 
 	 */
 
 	public static String disemvowel(String str) {
 		/* (?i) enables case-insensitivity */
 		return str.replaceAll("(?i)[aeiou]", "");
+	}
+
+	/*
+	 * QUESTION : The maximum sum sub-array problem consists in finding the maximum
+	 * sum of a contiguous subsequence in an array or list of integers
+	 */
+
+	public static int sequence(int[] arr) {
+		// Kadane's algorithm
+		var sum = 0;
+		var best = 0;
+		for (var i : arr) {
+			sum = (sum < 0) ? i : sum + i; /*
+											 * If previous sum is negative, it's a penalty so we start our new sum from
+											 * current element, else we take previous sum + current element
+											 */
+			if (sum > best) { /* If the current sum is greater than best of all previous value */
+				best = sum;
+			}
+		}
+		return best;
+	}
+
+	/*
+	 * QUESTION : Complete it so that passing in RGB decimal values will result in a
+	 * hexadecimal representation being returned. Valid decimal values for RGB are 0
+	 * - 255. Any values that fall out of that range must be rounded to the closest
+	 * valid value.
+	 */
+
+	public class RgbToHex {
+
+		public static String rgb(int r, int g, int b) {
+			return Stream.of(r, g, b).map(c -> { // First map is to round incorrect values.
+				if (c < 0) // Round to zero
+					return 0;
+				if (c > 255) // Round to max
+					return 255;
+				return c; // Else keep value
+			}).map(x -> "%02X".formatted(x)).collect(Collectors.joining(""));
+		}
+
 	}
 
 }
