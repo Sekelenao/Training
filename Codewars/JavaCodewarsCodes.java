@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -72,7 +73,7 @@ public class JavaCodewarsCodes {
 
 	/*
 	 * QUESTION : The maximum sum sub-array problem consists in finding the maximum
-	 * sum of a contiguous subsequence in an array or list of integers
+	 * sum of a contiguous subsequence in an array or list of integers.
 	 */
 
 	public static int sequence(int[] arr) {
@@ -110,6 +111,27 @@ public class JavaCodewarsCodes {
 			}).map(x -> "%02X".formatted(x)).collect(Collectors.joining(""));
 		}
 
+	}
+
+	/*
+	 * QUESTION : Write a function that takes an array of numbers (integers for the
+	 * tests) and a target number. It should find two different items in the array
+	 * that, when added together, give the target value. The indices of these items
+	 * should then be returned in a tuple / list.
+	 */
+
+	public static int[] twoSum(int[] numbers, int target) {
+		var previousValues = new HashMap<Integer, Integer>();
+		for (int index = 0; index < numbers.length; index++) {
+			var currentValue = numbers[index];
+			var neededValue = target - currentValue;
+			var matchingValue = previousValues.get(neededValue);
+			if (matchingValue != null) {
+				return new int[] { matchingValue, index };
+			}
+			previousValues.put(currentValue, index);
+		}
+		return null;
 	}
 
 }
