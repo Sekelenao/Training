@@ -1,5 +1,7 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -76,7 +78,7 @@ public class JavaCodewarsCodes {
 	 * sum of a contiguous subsequence in an array or list of integers.
 	 */
 
-	public static int sequence(int[] arr) {
+	public static int maximumSumSubArray(int[] arr) {
 		// Kadane's algorithm
 		var sum = 0;
 		var best = 0;
@@ -99,19 +101,17 @@ public class JavaCodewarsCodes {
 	 * valid value.
 	 */
 
-	public class RgbToHex {
 
-		public static String rgb(int r, int g, int b) {
-			return Stream.of(r, g, b).map(c -> { // First map is to round incorrect values.
-				if (c < 0) // Round to zero
-					return 0;
-				if (c > 255) // Round to max
-					return 255;
-				return c; // Else keep value
-			}).map(x -> "%02X".formatted(x)).collect(Collectors.joining(""));
-		}
-
+	public static String rgbToHex(int r, int g, int b) {
+		return Stream.of(r, g, b).map(c -> { // First map is to round incorrect values.
+			if (c < 0) // Round to zero
+				return 0;
+			if (c > 255) // Round to max
+				return 255;
+			return c; // Else keep value
+		}).map(x -> "%02X".formatted(x)).collect(Collectors.joining(""));
 	}
+
 
 	/*
 	 * QUESTION : Write a function that takes an array of numbers (integers for the
@@ -132,6 +132,44 @@ public class JavaCodewarsCodes {
 			previousValues.put(currentValue, index);
 		}
 		return null;
+	}
+	
+	/*
+	 * QUESTION : A format for expressing an ordered list of integers is to use a
+	 * comma separated list of either individual integers or a range of integers
+	 * denoted by the starting integer separated from the end integer in the range
+	 * by a dash, '-'. The range includes all integers in the interval including
+	 * both end points. It is not considered a range unless it spans at least 3
+	 * numbers. 
+	 * 
+	 * For example {-10, -9, -8, -6, -3, -2, -1, 0, 1, 3, 4, 5, 7, 8, 9, 10, 11, 14, 15, 17, 18, 19, 20}
+	 * returns "-10--8,-6,-3-1,3-5,7-11,14,15,17-20"
+	 */
+
+	public static ArrayList<String> subResult(List<Integer> buffer) {
+		ArrayList<String> subresult = new ArrayList<>();
+		if (buffer.size() < 3) { // not a sequence
+			buffer.stream().map(String::valueOf).forEach(e -> subresult.add(e));
+		} else { // is a sequence
+			subresult.add("%d-%d".formatted(buffer.get(0), buffer.get(buffer.size() - 1)));
+		}
+		return subresult;
+	}
+
+	public static String rangeExtraction(int[] arr) {
+		ArrayList<String> result = new ArrayList<>();
+		ArrayList<Integer> buffer = new ArrayList<>();
+		for (int i = 0; i < arr.length; i++) {
+			if (buffer.isEmpty() || ((arr[i] - 1) == buffer.get(buffer.size() - 1))) {
+				buffer.add(arr[i]); // we have a sequence so we just add to the buffer
+			} else {
+				result.addAll(subResult(buffer)); // add our sub-result to the result
+				buffer = new ArrayList<>(); // new buffer (faster than remove with the garbage collector)
+				buffer.add(arr[i]); // add the current element to the buffer after cleaning it
+			}
+		}
+		result.addAll(subResult(buffer)); // add last element to the result
+		return result.stream().collect(Collectors.joining(","));
 	}
 
 }
