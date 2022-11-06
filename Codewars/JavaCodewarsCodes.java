@@ -101,7 +101,6 @@ public class JavaCodewarsCodes {
 	 * valid value.
 	 */
 
-
 	public static String rgbToHex(int r, int g, int b) {
 		return Stream.of(r, g, b).map(c -> { // First map is to round incorrect values.
 			if (c < 0) // Round to zero
@@ -111,7 +110,6 @@ public class JavaCodewarsCodes {
 			return c; // Else keep value
 		}).map(x -> "%02X".formatted(x)).collect(Collectors.joining(""));
 	}
-
 
 	/*
 	 * QUESTION : Write a function that takes an array of numbers (integers for the
@@ -133,17 +131,17 @@ public class JavaCodewarsCodes {
 		}
 		return null;
 	}
-	
+
 	/*
 	 * QUESTION : A format for expressing an ordered list of integers is to use a
 	 * comma separated list of either individual integers or a range of integers
 	 * denoted by the starting integer separated from the end integer in the range
 	 * by a dash, '-'. The range includes all integers in the interval including
 	 * both end points. It is not considered a range unless it spans at least 3
-	 * numbers. 
+	 * numbers.
 	 * 
-	 * For example {-10, -9, -8, -6, -3, -2, -1, 0, 1, 3, 4, 5, 7, 8, 9, 10, 11, 14, 15, 17, 18, 19, 20}
-	 * returns "-10--8,-6,-3-1,3-5,7-11,14,15,17-20"
+	 * For example {-10, -9, -8, -6, -3, -2, -1, 0, 1, 3, 4, 5, 7, 8, 9, 10, 11, 14,
+	 * 15, 17, 18, 19, 20} returns "-10--8,-6,-3-1,3-5,7-11,14,15,17-20"
 	 */
 
 	public static ArrayList<String> subResult(List<Integer> buffer) {
@@ -170,6 +168,41 @@ public class JavaCodewarsCodes {
 		}
 		result.addAll(subResult(buffer)); // add last element to the result
 		return result.stream().collect(Collectors.joining(","));
+	}
+
+	/*
+	 * QUESTION : We need to sum big numbers and we require your help.
+	 * 
+	 * Write a function that returns the sum of two numbers. The input numbers are
+	 * strings and the function must return a string.
+	 */
+
+	public static String bigAdd(String a, String b) {
+		int tmp = 0;
+		var carrying = 0;
+		var result = new StringBuilder();
+		var firstNumber = new StringBuilder(a).reverse();
+		var secondNumber = new StringBuilder(b).reverse();
+		for (int i = 0; i < firstNumber.length(); i++) {
+			if (!secondNumber.isEmpty()) {
+				tmp = Character.getNumericValue(firstNumber.charAt(i))
+						+ Character.getNumericValue(secondNumber.charAt(0)) + carrying;
+				carrying = (tmp > 9) ? 1 : 0;
+				result.append(tmp % 10);
+				secondNumber.deleteCharAt(0);
+			} else {
+				tmp = Character.getNumericValue(firstNumber.charAt(i)) + carrying;
+				carrying = (tmp > 9) ? 1 : 0;
+				result.append(tmp % 10);
+			}
+		}
+		for (int i = 0; i < secondNumber.length(); i++) {
+			tmp = Character.getNumericValue(secondNumber.charAt(i)) + carrying;
+			carrying = (tmp > 9) ? 1 : 0;
+			result.append(tmp % 10);
+		}
+		return (carrying != 0) ? result.append(1).reverse().toString().replaceFirst("^0+(?!$)", "")
+				: result.reverse().toString().replaceFirst("^0+(?!$)", "");
 	}
 
 }
