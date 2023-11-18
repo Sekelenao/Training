@@ -8,7 +8,11 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class JavaCodewarsCodes {
+public final class JavaCodewarsCodes {
+
+	private JavaCodewarsCodes(){
+		throw new AssertionError("You cannot instantiate this class.");
+	}
 
 	/*
 	 * QUESTION : returns true if there are as many "o" as "x" in a word. False
@@ -204,5 +208,18 @@ public class JavaCodewarsCodes {
 		return (carrying != 0) ? result.append(1).reverse().toString().replaceFirst("^0+(?!$)", "")
 				: result.reverse().toString().replaceFirst("^0+(?!$)", "");
 	}
+
+	/* QUESTION :
+	The goal of this exercise is to convert a string to a new string where each character in the new string is "("
+	if that character appears only once in the original string, or ")" if that character appears more than once in
+	the original string. Ignore capitalization when determining if a character is a duplicate.
+	*/
+
+	static String encode(String word) {
+        var map = new HashMap<Integer, Integer>();
+        var lowerWord = word.toLowerCase(Locale.ROOT);
+        lowerWord.chars().forEach(c -> map.merge(c, 1, Integer::sum));
+        return lowerWord.chars().mapToObj(c -> map.get(c) > 1 ? ")" : "(").collect(Collectors.joining());
+    }
 
 }
